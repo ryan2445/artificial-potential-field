@@ -25,20 +25,20 @@ error = [0] * len(t)
 
 for i in range(1, len(t)):
     #   LINEAR
-    qv_x = 5 + t[i] #+ noise_std * np.random.randn() + noise_mean
-    qv_y = 5 + t[i] #+ noise_std * np.random.randn() + noise_mean
+    #qv_x = 5 + t[i] #+ noise_std * np.random.randn() + noise_mean
+    #qv_y = 5 + t[i] #+ noise_std * np.random.randn() + noise_mean
 
     #   SIN WAVE
-    #qv_x = t[i] #+ noise_std * np.random.randn() + noise_mean
-    #qv_y = 30 + 15 * sin(t[i]) #+ noise_std * np.random.randn() + noise_mean
+    qv_x = 5 + t[i] #+ noise_std * np.random.randn() + noise_mean
+    qv_y = 30 + 15 * sin(t[i]) #+ noise_std * np.random.randn() + noise_mean
 
     qv[i] = [qv_x, qv_y]
     qt_diff =  np.subtract(qv[i], qv[i-1])
     theta_t[i] = atan2(qt_diff[1], qt_diff[0])
 
-    relative = atan2(qrv[i-1][1], qrv[i-1][0])
-    v_rd[i] = sqrt(norm(pv)**2 + (2 * _lambda * norm(qrv[i-1]) * norm(pv) * abs(cos(theta_t[i] - relative))) + (_lambda**2 * norm(qrv[i-1])**2))
-    theta_r[i] = relative + asin((norm(pv) * sin(theta_t[i] - relative)) / v_rd[i])
+    relative_heading = atan2(qrv[i-1][1], qrv[i-1][0])
+    v_rd[i] = sqrt(norm(pv)**2 + (2 * _lambda * norm(qrv[i-1]) * norm(pv) * abs(cos(theta_t[i] - relative_heading))) + (_lambda**2 * norm(qrv[i-1])**2))
+    theta_r[i] = relative_heading + asin((norm(pv) * sin(theta_t[i] - relative_heading)) / v_rd[i])
 
     qr[i] = np.add(qr[i-1], np.multiply(v_rd[i] * delta_t, [cos(theta_r[i-1]), sin(theta_r[i-1])]))
     qrv[i] = np.subtract(qv[i], qr[i])
